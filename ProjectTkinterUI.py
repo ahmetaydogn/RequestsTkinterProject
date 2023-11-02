@@ -143,6 +143,8 @@ class Bottom_Currency_Frame():
             return "Yer yer yağışlı"
         elif status == "Patchy rain possible":
             return "Parçalı yağmur mümkün"
+        elif status == "Light rain":
+            return "Hafif yağmur"
 
 # ------------------------------------------------------------------------------
 
@@ -183,7 +185,7 @@ class Bottom_Currency_Frame():
     weather_status_answer_lbl = tk.Label(aside_frame, text=f"{set_weather_status(weather_time_json['current']['condition']['text'])}")
     weather_status_answer_lbl.config(font=aside_about_tokat_style, bg=aside_background_color, foreground=aside_foreground_color, width=20)
     weather_status_answer_lbl.grid(row=3, column=1, padx=0, pady=10, sticky='W')
-
+    
 
     # günlük veri image indirme ve oluşturma
     image_direction = f"https:{weather_time_json['current']['condition']['icon']}"
