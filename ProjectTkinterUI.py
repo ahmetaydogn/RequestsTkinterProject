@@ -18,17 +18,15 @@ window.geometry(f"{App_Width}x{App_Height}+{x}+{y}")
 window.title('Tokat Haberler!')
 window.state("zoomed")
 
-
-
 # Global değişkenlerim ve Requests modülü ile veri çekme
 other = ""
 currency_json = RequestsOperations.get_currency_data()
 (news_titles, news_links) = RequestsOperations.get_news_header()
 weather_time_json = RequestsOperations.get_weather_and_times_data()
-news_count = 7
+news_count = 8
 
 
-class Header_Frame():
+class HeaderFrame:
     # Class değişlenlerim, frame ve label oluştur
     header_background_color = "#89CFF3"
     header_foreground_color = "white"
@@ -37,11 +35,12 @@ class Header_Frame():
     header_frame = tk.Frame(window, bg=header_background_color)
     header_frame.pack(side=tk.TOP, fill=tk.X)
 
-    tokat_haberler_lbl = tk.Label(header_frame, text="Tokat Haberler", bg=header_background_color, fg=header_foreground_color, font=style)
+    tokat_haberler_lbl = tk.Label(header_frame, text="Tokat Haberler")
+    tokat_haberler_lbl.config(bg=header_background_color, fg=header_foreground_color, font=style)
     tokat_haberler_lbl.grid(row=0, column=0, padx=35, pady=10, sticky='W')
 
 
-class Side_News_Frame():
+class SideNewsFrame:
     # global değişkenlere ulaşmak için
     global news_titles
     global news_links
@@ -55,28 +54,28 @@ class Side_News_Frame():
 
     side_news_frame = tk.Frame(window, bg=side_news_background_color)
     side_news_frame.pack(side=tk.LEFT, fill=tk.Y)
-    haberler_lbl = tk.Label(side_news_frame, text='Son Haberler', font=style, bg=side_news_background_color, fg=side_news_foreground_color, width=15)
+    haberler_lbl = tk.Label(side_news_frame, text='Son Haberler', font=style,
+                            bg=side_news_background_color, fg=side_news_foreground_color, width=15)
     haberler_lbl.pack(padx=0, pady=10)
-
 
     # Haber başlıklarını çek ve text değişkenine aktar
     titles = []
     for i in range(news_count):
         news_title = news_titles[i]
         news_link = news_links[i]
-        news_label = tk.Text(side_news_frame, wrap=tk.WORD, font=news_style, bg=side_news_background_color, fg=side_news_foreground_color, height=1, width=30, borderwidth=0)
+        news_label = tk.Text(side_news_frame, wrap=tk.WORD, font=news_style)
 
         news_label.insert(tk.END, news_title)
-        news_label.config(state=tk.DISABLED)
+        news_label.config(state=tk.DISABLED, bg=side_news_background_color,
+                          fg=side_news_foreground_color, height=1, width=30, borderwidth=0)
         news_label.pack(padx=5, pady=10, expand=tk.YES, fill=tk.BOTH)
         titles.append(news_label)
 
-class Bottom_Currency_Frame():
+class BottomCurrencyFrame:
     # global değişkenlere ulaşmak için
     global other
     global currency_json
     global weather_time_json
-
 
     #  Class değişkenleri, kullanılan label değişkenleri ve frame oluşturma
     my_currency_code = ['try', 'eur', 'gbp', 'jpy', 'kwd', 'cad', 'idr']
@@ -91,10 +90,9 @@ class Bottom_Currency_Frame():
     currency_frame = tk.Frame(bottom_frame, bg=bottom_background_color)
     currency_frame.pack(side=tk.LEFT, fill=tk.Y, expand=False)
 
-    currency_lbl = tk.Label(currency_frame, text='Kur Değerleri', font=style_header, bg=bottom_background_color, fg=bottom_header_foreground_color)
+    currency_lbl = tk.Label(currency_frame, text='Kur Değerleri', font=style_header,
+                            bg=bottom_background_color, fg=bottom_header_foreground_color)
     currency_lbl.grid(row=0, column=0, padx=10, pady=10, sticky='W', columnspan=4)
-
-
 
     # kur değerleri ve isimlerini json dosyasından çekme
     counter = 0
@@ -103,55 +101,59 @@ class Bottom_Currency_Frame():
         counter += 1
     # çektiğimiz json verisinde USD ve kur gücü olmadığı için yapay şekilde kendim ekledim
     my_currency_list.append(
-        {'code': 'USD', 'alphaCode': 'USD', 'numericCode': '1', 'name': 'ABD Dolar', 'rate': 1, 'date': 'None', 'inverseRate': 1}
-    ) # [x_ülkesinin_rate_değeri] / [tr_nin_rate_değeri] = 'Örnek bir japon yeni 0.19TL olduğunu belirtir.'
+        {'code': 'USD', 'alphaCode': 'USD', 'numericCode': '1',
+         'name': 'ABD Dolar', 'rate': 1, 'date': 'None', 'inverseRate': 1}
+    )
+    # [x_ülkesinin_rate_değeri] / [tr_nin_rate_değeri] = 'Örnek bir japon yeni 0.19TL olduğunu belirtir.'
+
     tr_inverseRate = my_currency_list[0]['inverseRate']
     tr_currency_inverseRate = my_currency_list[0]['inverseRate']
     tr_value_list = []
     for currency in my_currency_list:
         tr_value_list.append((float(currency['inverseRate']) / tr_currency_inverseRate))
 
-
-
     # Kur label değişkenlerini oluştur ve doldur
     currency_count = len(my_currency_list) + 1
     currencyCodeCounter = 0
     currencyCodeInverseRateCounter = 0
-    for currentRow in range(1, (currency_count // 2) + 1):# currency_count çift olmalı, tek olursa patlar burası
+    for currentRow in range(1, (currency_count // 2) + 1):
+    #currency_count çift olmalı, tek olursa patlar burası
         for currentColumn in range(4):
             if currentColumn % 2 == 0:
-                currency_label = tk.Label(currency_frame, text=f"{my_currency_list[currencyCodeCounter]['code']}/{my_currency_list[0]['code']}: ", font=style, width=8)
+                print(my_currency_list[currencyCodeCounter]['code'])
+                indexData = f"{my_currency_list[currencyCodeCounter]['code']} / {my_currency_list[0]['code']}"
+                currency_label = tk.Label(currency_frame, text=indexData, font=style, width=8)
                 currency_label.config(bg=bottom_background_color, foreground=bottom_foreground_color)
                 currency_label.grid(row=currentRow, column=currentColumn, padx=10, pady=10, sticky='E')
                 currencyCodeCounter += 1
             else:
-                current_currency_label = tk.Label(currency_frame, text=f"{round(tr_value_list[currencyCodeInverseRateCounter], 3)}", font=style, width=10)
+                current_currency_label = tk.Label(currency_frame,
+                                                  text=round(tr_value_list[currencyCodeInverseRateCounter], 3),
+                                                  font=style, width=10)
                 current_currency_label.config(bg=bottom_background_color, foreground=bottom_foreground_color)
                 current_currency_label.grid(row=currentRow, column=currentColumn, padx=(0, 10), pady=10, sticky='W')
                 currencyCodeInverseRateCounter += 1
 
-
     # gelen ingilizce veriyi değiştir - burası pek olmadı sanırım :)
-    def set_weather_status(status):
-        if status == "Clear":
+    def set_weather_status(self):
+        if self == "Clear":
             return "Açık Hava"
-        elif status == "Partly cloudy":
+        elif self == "Partly cloudy":
             return "Parçalı Bulutlu"
-        elif status == "Patchy light drizzle":
+        elif self == "Patchy light drizzle":
             return "Yer yer hafif yağışlı"
-        elif status == "Patchy light rain":
+        elif self == "Patchy light rain":
             return "Yer yer yağışlı"
-        elif status == "Patchy rain possible":
+        elif self == "Patchy rain possible":
             return "Parçalı yağmur mümkün"
-        elif status == "Light rain":
+        elif self == "Light rain":
             return "Hafif yağmur"
-        elif status == "Moderate rain at times":
+        elif self == "Moderate rain at times":
             return "Hafif ılıman yağmur"
-        elif status == "Sunny":
+        elif self == "Sunny":
             return "Güneşli"
 
 # ------------------------------------------------------------------------------
-
 
     # aside frame oluşturma ve class değişkenlerim
     aside_background_color = "#2980b9"
@@ -162,34 +164,39 @@ class Bottom_Currency_Frame():
     aside_frame = tk.Frame(bottom_frame, bg=aside_background_color)
     aside_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-
-
     # Label oluşturmaları ve grid ile yerleştirme
     about_tokat_label = tk.Label(aside_frame, text='Bugün Tokat')
-    about_tokat_label.config(font=aside_about_tokat_header_style, bg=aside_background_color, foreground=aside_foreground_color, width=20)
+    about_tokat_label.config(font=aside_about_tokat_header_style, bg=aside_background_color,
+                             foreground=aside_foreground_color, width=20)
     about_tokat_label.grid(row=0, column=0, columnspan=2, padx=0, pady=10, sticky='nsew')
 
     localtime_lbl = tk.Label(aside_frame, text='Saat: ')
-    localtime_lbl.config(font=aside_about_tokat_style, bg=aside_background_color, foreground=aside_foreground_color, width=15)
+    localtime_lbl.config(font=aside_about_tokat_style, bg=aside_background_color,
+                         foreground=aside_foreground_color, width=15)
     localtime_lbl.grid(row=1, column=0, padx=0, pady=10, sticky='EW')
     localtime_answer_lbl = tk.Label(aside_frame, text=weather_time_json['location']['localtime'])
-    localtime_answer_lbl.config(font=aside_about_tokat_style, bg=aside_background_color, foreground=aside_foreground_color, width=20)
+    localtime_answer_lbl.config(font=aside_about_tokat_style, bg=aside_background_color,
+                                foreground=aside_foreground_color, width=20)
     localtime_answer_lbl.grid(row=1, column=1, padx=0, pady=10, sticky='W')
 
     weather_temperature_lbl = tk.Label(aside_frame, text='Sıcaklık: ')
-    weather_temperature_lbl.config(font=aside_about_tokat_style, bg=aside_background_color, foreground=aside_foreground_color, width=10)
+    weather_temperature_lbl.config(font=aside_about_tokat_style, bg=aside_background_color,
+                                   foreground=aside_foreground_color, width=10)
     weather_temperature_lbl.grid(row=2, column=0, padx=0, pady=10, sticky='EW')
     weather_temperature_answer_lbl = tk.Label(aside_frame, text=f"{weather_time_json['current']['temp_c']} Derece")
-    weather_temperature_answer_lbl.config(font=aside_about_tokat_style, bg=aside_background_color, foreground=aside_foreground_color, width=20)
+    weather_temperature_answer_lbl.config(font=aside_about_tokat_style, bg=aside_background_color,
+                                          foreground=aside_foreground_color, width=20)
     weather_temperature_answer_lbl.grid(row=2, column=1, padx=0, pady=10, sticky='W')
 
     weather_status_lbl = tk.Label(aside_frame, text='Hava Durumu: ')
-    weather_status_lbl.config(font=aside_about_tokat_style, bg=aside_background_color, foreground=aside_foreground_color, width=10)
+    weather_status_lbl.config(font=aside_about_tokat_style, bg=aside_background_color,
+                              foreground=aside_foreground_color, width=10)
     weather_status_lbl.grid(row=3, column=0, padx=0, pady=10, sticky='EW')
-    weather_status_answer_lbl = tk.Label(aside_frame, text=f"{set_weather_status(weather_time_json['current']['condition']['text'])}")
-    weather_status_answer_lbl.config(font=aside_about_tokat_style, bg=aside_background_color, foreground=aside_foreground_color, width=20)
+    weather_status_answer_lbl = tk.Label(aside_frame, text=set_weather_status(
+                                                            weather_time_json['current']['condition']['text']))
+    weather_status_answer_lbl.config(font=aside_about_tokat_style, bg=aside_background_color,
+                                     foreground=aside_foreground_color, width=20)
     weather_status_answer_lbl.grid(row=3, column=1, padx=0, pady=10, sticky='W')
-    
 
     # günlük veri image indirme ve oluşturma
     image_direction = f"https:{weather_time_json['current']['condition']['icon']}"
@@ -199,7 +206,8 @@ class Bottom_Currency_Frame():
         my_image = handler.write(my_image_bytes)
     weather_condition_icon = ImageTk.PhotoImage(Image.open(f"{image_name}.png").resize((30, 30)))
     weather_status_lbl = tk.Label(aside_frame, image=weather_condition_icon)
-    weather_status_lbl.config(font=aside_about_tokat_style, bg=aside_background_color, foreground=aside_foreground_color, width=10)
+    weather_status_lbl.config(font=aside_about_tokat_style, bg=aside_background_color,
+                              foreground=aside_foreground_color, width=10)
     weather_status_lbl.grid(row=4, column=0, columnspan=2, padx=0, pady=10, sticky='EW')
 
     # sosyal medya link blokları
@@ -211,12 +219,14 @@ class Bottom_Currency_Frame():
         "Whatsapp": ["https://api.whatsapp.com/send?phone=05300713743", "#25D366"]
     }
     for index, (media_name, other) in enumerate(social_media_links.items()):
-        aside_social_media_label = tk.Label(aside_frame, text=media_name, cursor="hand2", textvariable=other[0], font=aside_social_media_style, bg=aside_background_color,foreground=aside_foreground_color)
+        aside_social_media_label = tk.Label(aside_frame, text=media_name, cursor="hand2", textvariable=other[0],
+                                            font=aside_social_media_style, bg=aside_background_color,
+                                            foreground=aside_foreground_color)
         aside_social_media_label.config(bg=other[1], height=2, width=30, foreground=aside_foreground_color)
-        aside_social_media_label.bind("<Button-1>", lambda e:webbrowser.open_new(str(e.widget.cget("textvariable"))))
+        aside_social_media_label.bind("<Button-1>", lambda e :webbrowser.open_new(str(e.widget.cget("textvariable"))))
         aside_social_media_label.grid(row=int(index), column=3, padx=0, pady=0, sticky='E')
 
-class Main_Content_Frame():
+class MainContentFrame:
     main_frame_background_color = "#04364A"
     main_frame_foreground_color = "#fff"
     main_frame_header_font = ('Calibri', 24, 'bold')
@@ -227,13 +237,13 @@ class Main_Content_Frame():
     main_frame = tk.Frame(window, bg=main_frame_background_color)
     main_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-
     # about_me
     my_name = tk.Label(main_frame, text="Ahmet Aydoğan")
     my_name.config(bg=main_frame_background_color, foreground=main_frame_foreground_color, font=main_frame_header_font)
     my_name.grid(row=0, column=0, padx=item_padding, pady=(10, 0))
 
-    image_data = requests.get("https://avatars.githubusercontent.com/u/143658136?s=400&u=8aa137cb2ec5f8948f7ea5410f7273c0ec9bd8a3&v=4").content
+    image_data = requests.get("https://avatars.githubusercontent.com/u/"
+                              "143658136?s=400&u=8aa137cb2ec5f8948f7ea5410f7273c0ec9bd8a3&v=4").content
     image_name = "my_image.jpg"
     with open(image_name, 'wb') as handler:
         handler.write(image_data)
@@ -245,10 +255,10 @@ class Main_Content_Frame():
     my_description.config(bg=main_frame_background_color, foreground=main_frame_foreground_color, font=main_frame_font)
     my_description.grid(row=2, column=0, padx=item_padding, pady=(10, 0))
 
-
     # emirhan verileri
     emirhan_name = tk.Label(main_frame, text="Emirhan Çalışkan")
-    emirhan_name.config(bg=main_frame_background_color, foreground=main_frame_foreground_color, font=main_frame_header_font)
+    emirhan_name.config(bg=main_frame_background_color, foreground=main_frame_foreground_color,
+                        font=main_frame_header_font)
     emirhan_name.grid(row=0, column=2, padx=item_padding, pady=(10, 0))
 
     emirhan_image_data = requests.get("https://avatars.githubusercontent.com/u/126817623?v=4").content
@@ -260,17 +270,21 @@ class Main_Content_Frame():
     emirhan_tk_image.grid(row=1, column=2, padx=item_padding, pady=5)
 
     emirhan_my_description = tk.Label(main_frame, text="Ufuk Üniversitesi\nBilişim Güvenliği Teknolojisi\n18 Yaşında")
-    emirhan_my_description.config(bg=main_frame_background_color, foreground=main_frame_foreground_color, font=main_frame_font)
+    emirhan_my_description.config(bg=main_frame_background_color, foreground=main_frame_foreground_color,
+                                  font=main_frame_font)
     emirhan_my_description.grid(row=2, column=2, padx=item_padding, pady=(10, 0))
-
-
 
     # orta content
     debug_name = tk.Label(main_frame, text="Bizim Hakkımızda")
-    debug_name.config(width=14, bg=main_frame_background_color, foreground=main_frame_foreground_color, font=main_frame_header_font)
+    debug_name.config(width=14, bg=main_frame_background_color, foreground=main_frame_foreground_color,
+                      font=main_frame_header_font)
     debug_name.grid(row=0, column=1, padx=item_padding, pady=(10, 0))
 
-    debug_image_data = requests.get("https://scontent.fteq2-1.fna.fbcdn.net/v/t1.6435-1/98999664_1453585458144585_8260683318211641344_n.jpg?stp=dst-jpg_p320x320&_nc_cat=111&ccb=1-7&_nc_sid=2b6aad&_nc_ohc=8gCaSiMtfOIAX8Hgdh9&_nc_ht=scontent.fteq2-1.fna&oh=00_AfCLRane7rTtFZIf27XlJeMaTh_SIirAfo1uVrGGDWa3Lg&oe=6569F74F").content
+    debug_image_data = requests.get("https://scontent.fteq2-1.fna.fbcdn.net/v/t1.6435-1/"
+                                    "98999664_1453585458144585_8260683318211641344_n.jpg?"
+                                    "stp=dst-jpg_p320x320&_nc_cat=111&ccb=1-7&_nc_sid=2b6aad&"
+                                    "_nc_ohc=8gCaSiMtfOIAX8Hgdh9&_nc_ht=scontent.fteq2-1.fna&"
+                                    "oh=00_AfCLRane7rTtFZIf27XlJeMaTh_SIirAfo1uVrGGDWa3Lg&oe=6569F74F").content
     debug_image_name = "debug_image.jpg"
     with open(debug_image_name, 'wb') as handler:
         handler.write(debug_image_data)
@@ -283,7 +297,9 @@ class Main_Content_Frame():
                               "Debug Entertaiment Kurucu Üyeleri\n"
                               "Ahmet Aydoğan ve Emirhan Çalışkan")
     debug_description = tk.Label(main_frame, text=debug_description_text)
-    debug_description.config(bg=main_frame_background_color, foreground=main_frame_foreground_color, font=main_frame_description_font)
+    debug_description.config(bg=main_frame_background_color, foreground=main_frame_foreground_color,
+                             font=main_frame_description_font)
     debug_description.grid(row=2, column=1, padx=item_padding, pady=5, sticky='N')
+
 
 window.mainloop()
