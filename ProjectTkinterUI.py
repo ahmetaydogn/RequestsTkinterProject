@@ -145,6 +145,10 @@ class Bottom_Currency_Frame():
             return "Parçalı yağmur mümkün"
         elif status == "Light rain":
             return "Hafif yağmur"
+        elif status == "Moderate rain at times":
+            return "Hafif ılıman yağmur"
+        elif status == "Sunny":
+            return "Güneşli"
 
 # ------------------------------------------------------------------------------
 
@@ -223,6 +227,7 @@ class Main_Content_Frame():
     main_frame = tk.Frame(window, bg=main_frame_background_color)
     main_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
+
     # about_me
     my_name = tk.Label(main_frame, text="Ahmet Aydoğan")
     my_name.config(bg=main_frame_background_color, foreground=main_frame_foreground_color, font=main_frame_header_font)
@@ -240,16 +245,17 @@ class Main_Content_Frame():
     my_description.config(bg=main_frame_background_color, foreground=main_frame_foreground_color, font=main_frame_font)
     my_description.grid(row=2, column=0, padx=item_padding, pady=(10, 0))
 
+
     # emirhan verileri
     emirhan_name = tk.Label(main_frame, text="Emirhan Çalışkan")
     emirhan_name.config(bg=main_frame_background_color, foreground=main_frame_foreground_color, font=main_frame_header_font)
     emirhan_name.grid(row=0, column=2, padx=item_padding, pady=(10, 0))
 
-    emirhan_image_data = requests.get("https://scontent.cdninstagram.com/v/t51.2885-15/395099555_6646324812071766_3285653769392897489_n.webp?stp=dst-jpg_e35&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xMDgweDEzNTAuc2RyIn0&_nc_ht=scontent.cdninstagram.com&_nc_cat=106&_nc_ohc=VpPsqL8Q6RAAX_0bVf1&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzIxODU2OTUxMDk1MTg4MTg2NQ%3D%3D.2-ccb7-5&oh=00_AfDddJvPEEuiGO5e0o4Cs1qTEdugqMyfKj--lSTa7DlAOQ&oe=65463198&_nc_sid=10d13b").content
+    emirhan_image_data = requests.get("https://avatars.githubusercontent.com/u/126817623?v=4").content
     emirhan_image_name = "emirhan_image.jpg"
     with open(emirhan_image_name, 'wb') as handler:
         handler.write(emirhan_image_data)
-    emirhan_tk_image_open = ImageTk.PhotoImage(Image.open(emirhan_image_name).resize((200, 250)))
+    emirhan_tk_image_open = ImageTk.PhotoImage(Image.open(emirhan_image_name).resize((250, 250)))
     emirhan_tk_image = tk.Label(main_frame, image=emirhan_tk_image_open)
     emirhan_tk_image.grid(row=1, column=2, padx=item_padding, pady=5)
 
