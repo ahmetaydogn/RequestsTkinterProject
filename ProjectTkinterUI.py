@@ -120,7 +120,6 @@ class BottomCurrencyFrame:
     #currency_count çift olmalı, tek olursa patlar burası
         for currentColumn in range(4):
             if currentColumn % 2 == 0:
-                print(my_currency_list[currencyCodeCounter]['code'])
                 indexData = f"{my_currency_list[currencyCodeCounter]['code']} / {my_currency_list[0]['code']}"
                 currency_label = tk.Label(currency_frame, text=indexData, font=style, width=8)
                 currency_label.config(bg=bottom_background_color, foreground=bottom_foreground_color)
