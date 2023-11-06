@@ -24,6 +24,7 @@ currency_json = RequestsOperations.get_currency_data()
 (news_titles, news_links) = RequestsOperations.get_news_header()
 weather_time_json = RequestsOperations.get_weather_and_times_data()
 news_count = 8
+titles = []
 
 
 class HeaderFrame:
@@ -45,6 +46,7 @@ class SideNewsFrame:
     global news_titles
     global news_links
     global news_count
+    global titles
 
     # Classta kullandığım değişkenler, label değişkenlerim ve frame oluşturma
     side_news_background_color = "#4F4A45"
@@ -58,18 +60,18 @@ class SideNewsFrame:
                             bg=side_news_background_color, fg=side_news_foreground_color, width=15)
     haberler_lbl.pack(padx=0, pady=10)
 
+
+
     # Haber başlıklarını çek ve text değişkenine aktar
-    titles = []
     for i in range(news_count):
         news_title = news_titles[i]
         news_link = news_links[i]
-        news_label = tk.Text(side_news_frame, wrap=tk.WORD, font=news_style)
-
-        news_label.insert(tk.END, news_title)
-        news_label.config(state=tk.DISABLED, bg=side_news_background_color,
-                          fg=side_news_foreground_color, height=1, width=30, borderwidth=0)
+        news_label = tk.Label(side_news_frame, text=news_title, wraplength=320, justify=tk.CENTER, font=news_style)
+        news_label.config(bg=side_news_background_color, cursor='hand2',
+                          foreground=side_news_foreground_color, height=1, width=30, borderwidth=0)
         news_label.pack(padx=5, pady=10, expand=tk.YES, fill=tk.BOTH)
         titles.append(news_label)
+
 
 class BottomCurrencyFrame:
     # global değişkenlere ulaşmak için
@@ -300,5 +302,13 @@ class MainContentFrame:
                              font=main_frame_description_font)
     debug_description.grid(row=2, column=1, padx=item_padding, pady=5, sticky='N')
 
+def open_new(e):
+    text = str(e.widget.cget('text'))
+    for title in news_titles:
+        if text.strip() == title.strip():
+            webbrowser.open_new(f"https://www.tokathaber.com.tr{news_links[news_titles.index(title)]}")
+
+for textProperty in titles:
+    textProperty.bind("<Double-Button-1>", open_new)
 
 window.mainloop()
